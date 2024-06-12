@@ -2,7 +2,7 @@ package com.ftn.isa.service.impl;
 
 import java.util.List;
 
-import com.ftn.isa.dto.auth.UserRequest;
+import com.ftn.isa.dto.user.UserRequestDTO;
 import com.ftn.isa.model.Role;
 import com.ftn.isa.model.User;
 import com.ftn.isa.repository.UserRepository;
@@ -40,18 +40,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User save(UserRequest userRequest) {
+	public User save(UserRequestDTO userRequestDTO) {
 		User u = new User();
-		u.setUsername(userRequest.getUsername());
+		u.setUsername(userRequestDTO.getUsername());
 		
 		// pre nego sto postavimo lozinku u atribut hesiramo je kako bi se u bazi nalazila hesirana lozinka
 		// treba voditi racuna da se koristi isi password encoder bean koji je postavljen u AUthenticationManager-u kako bi koristili isti algoritam
-		u.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+		u.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
 		
-		u.setFirstName(userRequest.getFirstname());
-		u.setLastName(userRequest.getLastname());
+		u.setFirstName(userRequestDTO.getFirstname());
+		u.setLastName(userRequestDTO.getLastname());
 		u.setEnabled(true);
-		u.setEmail(userRequest.getEmail());
+		u.setEmail(userRequestDTO.getEmail());
 
 		// u primeru se registruju samo obicni korisnici i u skladu sa tim im se i dodeljuje samo rola USER
 		List<Role> roles = roleService.findByName("ROLE_USER");

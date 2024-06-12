@@ -1,6 +1,8 @@
 package com.ftn.isa.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Column;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+@Setter
 @Entity
 @Table(name = "ROLE")
 public class Role implements GrantedAuthority {
@@ -21,6 +24,7 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Getter
     @Column(name = "name")
     String name;
 
@@ -30,21 +34,9 @@ public class Role implements GrantedAuthority {
         return name;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @JsonIgnore
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
 }

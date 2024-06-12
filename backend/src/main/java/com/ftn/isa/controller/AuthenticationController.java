@@ -1,8 +1,8 @@
 package com.ftn.isa.controller;
 
 import com.ftn.isa.dto.auth.JwtAuthenticationRequest;
-import com.ftn.isa.dto.auth.UserRequest;
 import com.ftn.isa.dto.auth.UserTokenState;
+import com.ftn.isa.dto.user.UserRequestDTO;
 import com.ftn.isa.exception.ResourceConflictException;
 import com.ftn.isa.model.User;
 import com.ftn.isa.service.UserService;
@@ -38,8 +38,6 @@ public class AuthenticationController {
     @Autowired
     private UserService userService;
 
-    // Prvi endpoint koji pogadja korisnik kada se loguje.
-    // Tada zna samo svoje korisnicko ime i lozinku i to prosledjuje na backend.
     @PostMapping("/login")
     public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {
         // Ukoliko kredencijali nisu ispravni, logovanje nece biti uspesno, desice se
@@ -61,14 +59,14 @@ public class AuthenticationController {
 
     // Endpoint za registraciju novog korisnika
     @PostMapping("/signup")
-    public ResponseEntity<User> addUser(@RequestBody UserRequest userRequest, UriComponentsBuilder ucBuilder) {
-        User existUser = this.userService.findByUsername(userRequest.getUsername());
+    public ResponseEntity<User> addUser(@RequestBody UserRequestDTO userRequestDTO, UriComponentsBuilder ucBuilder) {
+        User existUser = this.userService.findByUsername(userRequestDTO.getUsername());
 
         if (existUser != null) {
-            throw new ResourceConflictException(userRequest.getId(), "Username already exists");
+            throw new ResourceConflictException(userRequestDTO.getId(), "Username already exists");
         }
 
-        User user = this.userService.save(userRequest);
+        User user = this.userService.save(userRequestDTO);
 
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
