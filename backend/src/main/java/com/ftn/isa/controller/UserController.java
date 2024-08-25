@@ -27,6 +27,7 @@ public class UserController {
     // Za pristup ovoj metodi neophodno je da ulogovani korisnik ima ADMIN ulogu
     // Ukoliko nema, server ce vratiti gresku 403 Forbidden
     // Korisnik jeste autentifikovan, ali nije autorizovan da pristupi resursu
+
     @GetMapping("/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public User loadById(@PathVariable Long userId) {
