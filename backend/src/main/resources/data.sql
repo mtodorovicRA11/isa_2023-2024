@@ -28,4 +28,10 @@ INSERT INTO user_role (user_id, role_id)
 VALUES (3, 3);
 
 INSERT INTO company (city, company_description, country, email, name, phone_number)
-VALUES ('Novi Sad', 'Some desc', 'Serbia', 'ftn@test.com', 'FTN', '+3811111111');
+VALUES ('Novi Sad', 'Fakultet Tehnickih nauka', 'Serbia', 'ftn@test.com', 'FTN', '+3811111111');
+
+INSERT INTO reservation (duration, is_free, start_time, administrator_id, company_id, user_id)
+VALUES(60, true, '2024-08-29 09:00:00', 1, 1, 1),
+      (30, true,'2024-08-29 10:00:00', 1, 1, 1),
+      (60, true,'2024-08-29 11:00:00', 1, 1, 1),
+      (60, true,'2024-08-29 12:00:00', 1, 1, 1);

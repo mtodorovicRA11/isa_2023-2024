@@ -22,8 +22,8 @@ public class IsaApplication {
 		mailSender.setHost("smtp.gmail.com");
 		mailSender.setPort(587);
 
-		mailSender.setUsername("noreplystaristudentisatim@gmail.com");
-		mailSender.setPassword("FinishISA2024");
+		mailSender.setUsername("staristudentisatim@gmail.com");
+		mailSender.setPassword("nwph rvvu izim ynjb");
 
 		Properties props = mailSender.getJavaMailProperties();
 		props.put("mail.smtp.ssl.protocols", "TLSv1.2");

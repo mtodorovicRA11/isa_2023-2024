@@ -2,10 +2,12 @@ package com.ftn.isa.controller;
 
 import com.ftn.isa.dto.auth.JwtAuthenticationRequest;
 import com.ftn.isa.dto.auth.UserTokenState;
+import com.ftn.isa.dto.email.EmailDetailsDTO;
 import com.ftn.isa.dto.user.UserRequestDTO;
 import com.ftn.isa.exception.ResourceConflictException;
 import com.ftn.isa.model.User;
 import com.ftn.isa.service.UserService;
+import com.ftn.isa.service.impl.EmailService;
 import com.ftn.isa.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,19 +19,22 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "http://localhost:4200")
 public class AuthenticationController {
 
     @Autowired
-    private TokenUtils tokenUtils;
-
+    TokenUtils tokenUtils;
     @Autowired
-    private AuthenticationManager authenticationManager;
-
+    AuthenticationManager authenticationManager;
     @Autowired
-    private UserService userService;
+    UserService userService;
+    @Autowired
+    EmailService emailService;
 
     @PostMapping("/login")
     public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) {
@@ -50,13 +55,29 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<User> addUser(@RequestBody UserRequestDTO userRequestDTO) {
-        User existUser = this.userService.findByUsername(userRequestDTO.getUsername());
+        User existingUser = userService.findByUsername(userRequestDTO.getUsername());
 
-        if (existUser != null) {
-            throw new ResourceConflictException(userRequestDTO.getId(), "Username already exists");
+        if (existingUser != null) {
+            throw new ResourceConflictException(existingUser.getId(), "Username already exists");
         }
+        String verification = new BigInteger(30, new SecureRandom()).toString(32).toUpperCase();
 
-        User user = this.userService.save(userRequestDTO);
+        userRequestDTO.setVerificationCode(verification);
+        User user = userService.save(userRequestDTO);
+
+        EmailDetailsDTO email = new EmailDetailsDTO();
+        email.setRecipient(user.getEmail());
+        email.setSubject("Account verification!");
+        email.setMessageBody("In order to verify your account, you need to go to the following link : " + "http://localhost:8080/auth/activate?code" +
+                "=" + verification);
+        emailService.sendEmail(email);
+
         return new ResponseEntity<>(user, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/activate")
+    public ResponseEntity<User> activateUser(@RequestParam String code) {
+        User user = userService.getByVerificationCode(code);
+        return new ResponseEntity<>(userService.activate(user), HttpStatus.CREATED);
     }
 }

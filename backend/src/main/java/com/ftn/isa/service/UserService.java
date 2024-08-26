@@ -13,4 +13,8 @@ public interface UserService {
     List<User> findAll();
 
     User save(UserRequestDTO userRequestDTO);
+
+    User getByVerificationCode(String code);
+
+    User activate(User user);
 }

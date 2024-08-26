@@ -4,13 +4,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-// DTO koji preuzima podatke iz HTML forme za registraciju
 @Setter
 @Getter
 @NoArgsConstructor
 public class UserRequestDTO {
-
-    private Long id;
 
     private String username;
 
@@ -22,4 +19,11 @@ public class UserRequestDTO {
 
     private String email;
 
+    private String phoneNumber;
+
+    private String jmbg;
+
+    private String verificationCode;
+
+    private String jobTitle;
 }
