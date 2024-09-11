@@ -9,5 +9,5 @@ public interface CompanyReservationRepository extends JpaRepository<CompanyReser
 
     boolean existsByUserAndCompany(User user, Company company);
 
-    boolean existsByUserAndReservation_Administrator(User user, User administrator);
+//    boolean existsByUserAndReservation_Administrator(User user, User administrator);
 }

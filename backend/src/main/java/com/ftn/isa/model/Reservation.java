@@ -16,19 +16,13 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private long id;
-    @Column
-    private LocalDateTime startTime;
-    @Column
-    private int duration;
-    @ManyToOne
-    @JoinColumn(name = "administrator_id")
-    private User administrator;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(name = "timeslot_id")
+    private TimeSlot timeSlot;
+    @OneToOne
     @JoinColumn(name = "company_id")
     private Company company;
-    @Column
-    private boolean isFree;
 }

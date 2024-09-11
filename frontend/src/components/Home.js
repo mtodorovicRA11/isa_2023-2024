@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Home.css';
 import Header from './Header';
+import { useNavigate } from 'react-router-dom';
 
 const Home = ({token}) => {
   const [companies, setCompanies] = useState([]);
@@ -21,7 +22,12 @@ const Home = ({token}) => {
 
   useEffect(() => {
     if (selectedCompany) {
-      axios.get(`http://localhost:8080/equipment/get-by-company?companyId=${selectedCompany.id}`)
+      console.log(selectedCompany)
+      axios.get(`http://localhost:8080/equipment/company/${selectedCompany.id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`  // Set the Bearer token
+        }
+      })
         .then(response => setEquipment(response.data))
         .catch(error => console.error('Error fetching equipment:', error));
     }
@@ -38,6 +44,12 @@ const Home = ({token}) => {
 
   const handleCompanySelect = (company) => {
     setSelectedCompany(company);
+  };
+  const navigate = useNavigate();
+
+  const handleEquipmentClick = (id) => {
+    let companyId = selectedCompany.id;
+    navigate(`/equipment/${companyId}/${id}`);
   };
 
   return (
@@ -60,7 +72,9 @@ const Home = ({token}) => {
             <h2>Equipment for {selectedCompany.name}</h2>
             <ul className="equipment-list">
               {equipment.map(eq => (
-                <li key={eq.id} className="equipment-item">{eq.name}</li>
+                  <li key={eq.id} className="equipment-item" onClick={() => handleEquipmentClick(eq.id)}>
+                    {eq.name}
+                  </li>
               ))}
             </ul>
           </div>

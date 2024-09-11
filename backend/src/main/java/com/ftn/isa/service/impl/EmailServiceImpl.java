@@ -1,6 +1,7 @@
 package com.ftn.isa.service.impl;
 
 import com.ftn.isa.dto.email.EmailDetailsDTO;
+import com.ftn.isa.service.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
