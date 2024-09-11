@@ -19,5 +19,9 @@ public class Equipment {
     private Long id;
     @Column(name = "name", nullable = false)
     private String name;
-
+    @Column(name = "amount", nullable = false)
+    private int amount;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 }

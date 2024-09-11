@@ -1,0 +1,59 @@
+.reservation-container {
+    padding: 20px;
+    background-color: #f4f8fb;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 20px auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.timeslot-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.timeslot-item {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+}
+
+.timeslot-item label {
+    margin-left: 10px;
+}
+
+.reserve-button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #16a085;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.reserve-button:hover {
+    background-color: #138d75;
+}
+
+.reservation-status {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #e74c3c;
+}
