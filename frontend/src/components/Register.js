@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Register.css';
-import { createUserDTO } from '../dto/UserDTO';
 
 const Register = () => {
   // User details state

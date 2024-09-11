@@ -1,6 +1,7 @@
 package com.ftn.isa.service;
 
 import com.ftn.isa.model.Reservation;
+import com.ftn.isa.model.TimeSlot;
 import com.ftn.isa.model.User;
 
 public interface QRCodeService {

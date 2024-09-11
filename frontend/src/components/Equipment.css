@@ -1,59 +1,67 @@
+/* Equipment.css */
 .reservation-container {
+    font-family: Arial, sans-serif;
+    margin: 0 auto;
+    max-width: 800px;
     padding: 20px;
-    background-color: #f4f8fb;
-    border-radius: 10px;
-    max-width: 600px;
-    margin: 20px auto;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h2 {
-    text-align: center;
-    color: #2c3e50;
-    margin-bottom: 20px;
+.main-content {
+    padding: 20px;
+}
+
+h2, h3 {
+    color: #333;
 }
 
 .timeslot-list {
-    list-style-type: none;
+    list-style: none;
     padding: 0;
-    margin: 0;
 }
 
 .timeslot-item {
-    margin: 10px 0;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    border: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
 }
 
 .timeslot-item label {
-    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.timeslot-item input {
+    margin-right: 10px;
 }
 
 .reserve-button {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    background-color: #16a085;
-    color: #fff;
+    background-color: #28a745;
+    color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 1.2rem;
-    font-weight: 500;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
 }
 
 .reserve-button:hover {
-    background-color: #138d75;
+    background-color: #218838;
 }
 
 .reservation-status {
-    text-align: center;
     margin-top: 10px;
     font-weight: bold;
-    color: #e74c3c;
+}
+
+.footer {
+    background-color: #0044cc;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    border-radius: 0 0 8px 8px;
+    margin-top: 20px;
 }

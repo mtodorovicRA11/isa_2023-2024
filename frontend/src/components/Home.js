@@ -48,7 +48,8 @@ const Home = ({token}) => {
   const navigate = useNavigate();
 
   const handleEquipmentClick = (id) => {
-    navigate(`/equipment/${id}`);
+    let companyId = selectedCompany.id;
+    navigate(`/equipment/${companyId}/${id}`);
   };
 
   return (

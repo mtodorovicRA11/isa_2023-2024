@@ -1,6 +1,7 @@
 package com.ftn.isa.service.impl;
 
 import com.ftn.isa.model.Reservation;
+import com.ftn.isa.model.TimeSlot;
 import com.ftn.isa.model.User;
 import com.ftn.isa.service.QRCodeService;
 import com.google.zxing.BarcodeFormat;
@@ -26,13 +27,13 @@ public class QRCodeServiceImpl implements QRCodeService {
 
     public String generateQRCode(User user, Reservation reservation) {
         String userText = user.getFirstName() + ' ' + user.getLastName();
-        String companyText = reservation.getCompany().getName();
-        String dateText = reservation.getStartTime().toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
-        String timeText = reservation.getStartTime().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
-        String durationText = String.valueOf(reservation.getDuration());
+        String dateText = reservation.getTimeSlot().getStartTime().toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
+        String timeText = reservation.getTimeSlot().getStartTime().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+        String equipment = String.valueOf(reservation.getTimeSlot().getEquipment().getName());
+        String reservationId = String.valueOf(reservation.getId());
 
-        String qrCodeText = "Reservation: \n-User: " + userText + "\n-Company: " + companyText + "\n-Date: " + dateText + "\n-Time: " + timeText +
-                "\n-Duration: " + durationText + " minutes";
+        String qrCodeText = "Reservation: \n-User: " + userText + "\n-Date: " + dateText + "\n-Time: " + timeText + "\n-Reservation: " + reservationId  + "\n-Equipment: " + equipment;
+
 
         byte[] image = getQRCodeImage(qrCodeText, 250, 250);
 

@@ -1,4 +1,4 @@
-package com.ftn.isa.service.impl;
+package com.ftn.isa.service;
 
 import com.ftn.isa.dto.email.EmailDetailsDTO;
 import org.springframework.stereotype.Service;

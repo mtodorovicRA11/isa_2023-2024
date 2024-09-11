@@ -1,66 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import './Equipment.css';
 
-const Equipment = ({ match, token }) => {
-    const { id } = useParams(); // Extract 'id' from URL parameters
+const Equipment = ({ token }) => {
+    const { companyId, id } = useParams();
     const [equipment, setEquipment] = useState(null);
     const [timeslots, setTimeslots] = useState([]);
     const [selectedTimeslot, setSelectedTimeslot] = useState(null);
     const [reservationStatus, setReservationStatus] = useState('');
 
     useEffect(() => {
-        const fetchEquipment = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8080/equipment/equipment/${id}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`  // Set the Bearer token
-                    }
-                });
+        axios.get(`http://localhost:8080/equipment/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
                 setEquipment(response.data);
-            } catch (error) {
+            })
+            .catch(error => {
                 console.error('Error fetching equipment:', error);
-            }
-        };
+            });
 
-        const fetchTimeslots = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8080/equipment/equipment/${id}/timeslots`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`  // Set the Bearer token
-                    }
-                });
+        axios.get(`http://localhost:8080/equipment/${id}/timeslots`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
                 setTimeslots(response.data);
-            } catch (error) {
+            })
+            .catch(error => {
                 console.error('Error fetching timeslots:', error);
-            }
-        };
+            });
+    }, [id, token]);
 
-        fetchEquipment();
-        fetchTimeslots();
-    }, [id]);
-
-    const handleReserve = async () => {
+    const handleReserve = () => {
         if (selectedTimeslot) {
-            try {
-                const response = await axios.post(`http://localhost:8080/equipment/equipment/${id}/reserve`, null, {
-                    params: { timeslotId: selectedTimeslot },
-                    headers: {
-                        'Authorization': `Bearer ${token}`  // Set the Bearer token
-                    }
+            axios.post(`http://localhost:8080/equipment/${id}/reserve`, null, {
+                params: { timeslotId: selectedTimeslot, companyId: companyId },
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+                .then(response => {
+                    setReservationStatus(response.data);
+                    setSelectedTimeslot(null);
+                    return axios.get(`http://localhost:8080/equipment/${id}/timeslots`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                })
+                .then(response => {
+                    setTimeslots(response.data);
+                })
+                .catch(error => {
+                    console.error('Error reserving equipment:', error);
+                    setReservationStatus('Reservation failed');
                 });
-                setReservationStatus(response.data);
-                setSelectedTimeslot(null);
-                const updatedTimeslots = await axios.get(`http://localhost:8080/equipment/equipment/${id}/timeslots`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`  // Set the Bearer token
-                    }
-                });
-                setTimeslots(updatedTimeslots.data);
-            } catch (error) {
-                console.error('Error reserving equipment:', error);
-                setReservationStatus('Reservation failed');
-            }
         } else {
             setReservationStatus('No timeslot selected');
         }

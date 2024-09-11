@@ -26,10 +26,10 @@ public class ReservationsController {
         }
     }
 
-    @PostMapping("/cancel")
-    public ResponseEntity<String> cancelReservation(@RequestParam Long reservationId, @RequestParam Long userId) {
+    @PostMapping("/cancel/{reservationId}")
+    public ResponseEntity<String> cancelReservation(@PathVariable Long reservationId) {
         try {
-            reservationService.cancelReservation(reservationId, userId);
+            reservationService.cancelReservation(reservationId);
             return ResponseEntity.ok("Reservation canceled successfully!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

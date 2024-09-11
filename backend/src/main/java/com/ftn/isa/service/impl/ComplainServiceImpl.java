@@ -41,9 +41,9 @@ public class ComplainServiceImpl implements ComplainService {
             throw new RuntimeException("You can only complain about a company you made reservation.");
         }
 
-        if (administrator != null && !companyReservationRepository.existsByUserAndReservation_Administrator(user, administrator)) {
-            throw new RuntimeException("You can only complain about an administrator you had contact with.");
-        }
+//        if (administrator != null && !companyReservationRepository.existsByUserAndReservation_Administrator(user, administrator)) {
+//            throw new RuntimeException("You can only complain about an administrator you had contact with.");
+//        }
 
         Complain complain = new Complain();
         complain.setUser(user);

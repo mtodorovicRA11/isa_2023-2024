@@ -2,13 +2,11 @@ package com.ftn.isa.service.impl;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import com.ftn.isa.dto.user.UserRequestDTO;
 import com.ftn.isa.model.Role;
 import com.ftn.isa.model.User;
 import com.ftn.isa.repository.UserRepository;
-import com.ftn.isa.service.ReservationServiceImpl;
 import com.ftn.isa.service.RoleService;
 import com.ftn.isa.service.UserService;
 import org.slf4j.Logger;

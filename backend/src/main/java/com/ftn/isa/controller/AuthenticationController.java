@@ -7,7 +7,7 @@ import com.ftn.isa.dto.user.UserRequestDTO;
 import com.ftn.isa.exception.ResourceConflictException;
 import com.ftn.isa.model.User;
 import com.ftn.isa.service.UserService;
-import com.ftn.isa.service.impl.EmailService;
+import com.ftn.isa.service.EmailService;
 import com.ftn.isa.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

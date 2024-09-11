@@ -37,12 +37,6 @@ INSERT INTO company (city, company_description, country, email, name, phone_numb
 VALUES ('Novi Sad', 'Fakultet Tehnickih nauka', 'Serbia', 'ftn@test.com', 'FTN', '+3811111111'),
        ('Beograd', 'ETF DESC', 'Serbia', 'etf@etf.com', 'ETF', '+3811111112');
 
-INSERT INTO reservation (duration, is_free, start_time, administrator_id, company_id, user_id)
-VALUES (60, true, '2024-08-29 09:00:00', 1, 1, 1),
-       (30, true, '2024-08-29 10:00:00', 1, 1, 1),
-       (60, true, '2024-08-29 11:00:00', 1, 1, 1),
-       (60, true, '2024-08-29 12:00:00', 1, 1, 1);
-
 INSERT INTO equipment (name, amount, company_id)
 VALUES ('Stethoscope', 50, 1),
        ('Sphygmomanometer', 75, 1),
@@ -71,5 +65,3 @@ VALUES ('2024-09-12 09:00:00', '2024-09-12 10:00:00', true, 1),
        ('2024-09-13 12:00:00', '2024-09-13 13:00:00', true, 2),
        ('2024-09-13 13:00:00', '2024-09-13 14:00:00', true, 3),
        ('2024-09-13 14:00:00', '2024-09-13 15:00:00', true, 3);
-
-
