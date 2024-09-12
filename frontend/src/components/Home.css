@@ -126,3 +126,10 @@ h2 {
 }
 
 
+.logout-button {
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    text-decoration: none;
+    color: #007bff;
+}

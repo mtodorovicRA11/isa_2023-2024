@@ -1,5 +1,6 @@
 package com.ftn.isa.controller;
 
+import com.ftn.isa.dto.reservation.NewReservationDTO;
 import com.ftn.isa.model.Equipment;
 import com.ftn.isa.model.Reservation;
 import com.ftn.isa.model.TimeSlot;
@@ -71,12 +72,12 @@ public class EquipmentController {
         return equipmentService.getAvailableTimeslots(equipmentId);
     }
 
-    @PostMapping("/{equipmentId}/reserve")
-    public String reserveEquipment(@PathVariable Long equipmentId, @RequestParam Long timeslotId, @RequestParam Long companyId) {
+    @PostMapping("/reserve")
+    public String reserveEquipment(@RequestBody NewReservationDTO newReservationDTO, @RequestParam Long companyId) {
         Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User u = (User) user;
 
-        boolean reserved = equipmentService.reserveEquipment(equipmentId, timeslotId, u, companyId);
+        boolean reserved = equipmentService.reserveEquipment(newReservationDTO, u, companyId);
         return reserved ? "Reservation successful" : "Reservation failed. Timeslot is unavailable.";
     }
 

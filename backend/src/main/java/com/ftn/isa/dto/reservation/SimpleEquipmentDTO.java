@@ -4,12 +4,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
-public class NewReservationDTO {
-    private List<SimpleEquipmentDTO> equipment;
-    private Long timeSlotId;
+public class SimpleEquipmentDTO {
+    private Long id;
+    private int amount;
 }

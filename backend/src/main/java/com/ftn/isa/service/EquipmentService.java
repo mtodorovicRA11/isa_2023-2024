@@ -1,5 +1,6 @@
 package com.ftn.isa.service;
 
+import com.ftn.isa.dto.reservation.NewReservationDTO;
 import com.ftn.isa.model.Equipment;
 import com.ftn.isa.model.Reservation;
 import com.ftn.isa.model.TimeSlot;
@@ -26,7 +27,7 @@ public interface EquipmentService {
 
     List<TimeSlot> getAvailableTimeslots(Long equipmentId);
 
-    boolean reserveEquipment(Long equipmentId, Long timeslotId, User user, Long companyId);
+    boolean reserveEquipment(NewReservationDTO newReservationDTO, User user, Long companyId);
 
     List<Reservation> getReservationsByUserId(Long userId);
 }

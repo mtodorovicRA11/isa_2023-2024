@@ -23,8 +23,7 @@ function App() {
                 <Route path="/register" element={<Register/>}/>
                 <Route path="/home" element={<Home token={token}/>}/>
                 <Route path="/" element={<PrivateRoute />}>
-                    <Route path="/equipment/:companyId/:id" element={<Equipment token={token}/>} />
-                    <Route path="/equipment/:companyId/" element={<Equipment token={token}/>} />
+                    <Route path="/equipment/:id" element={<Equipment token={token}/>} />
                     <Route path="/equipment/" element={<Equipment token={token}/>} />
                     <Route path="/" element={<Home />} />
                 </Route>

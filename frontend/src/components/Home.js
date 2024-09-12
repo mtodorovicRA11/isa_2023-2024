@@ -44,6 +44,7 @@ const Home = ({token}) => {
 
   const handleCompanySelect = (company) => {
     setSelectedCompany(company);
+    navigate(`/equipment/${company.id}`);
   };
   const navigate = useNavigate();
 

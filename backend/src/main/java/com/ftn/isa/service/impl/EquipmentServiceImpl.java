@@ -1,6 +1,7 @@
 package com.ftn.isa.service.impl;
 
 import com.ftn.isa.dto.email.EmailDetailsDTO;
+import com.ftn.isa.dto.reservation.NewReservationDTO;
 import com.ftn.isa.model.*;
 import com.ftn.isa.repository.CompanyRepository;
 import com.ftn.isa.repository.EquipmentRepository;
@@ -12,9 +13,7 @@ import com.ftn.isa.service.QRCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class EquipmentServiceImpl implements EquipmentService {
@@ -36,18 +35,22 @@ public class EquipmentServiceImpl implements EquipmentService {
         return timeslotRepository.findByEquipmentIdAndIsAvailable(equipmentId, true);
     }
 
-    public boolean reserveEquipment(Long equipmentId, Long timeslotId, User user, Long companyId) {
+    public boolean reserveEquipment(NewReservationDTO newReservationDTO, User user, Long companyId) {
+        Long timeslotId = newReservationDTO.getTimeSlotId();
         TimeSlot timeslot = timeslotRepository.findById(timeslotId).orElseThrow();
         Company company = companyRepository.findById(companyId).orElseThrow();
+
         List<Reservation> reservations = reservationRepository.findAll();
         reservations.forEach(reservation -> {
-            if(Objects.equals(company.getId(), reservation.getCompany().getId()) && Objects.equals(user.getId(), reservation.getUser().getId())) {
+            if (Objects.equals(company.getId(), reservation.getCompany().getId()) && Objects.equals(user.getId(), reservation.getUser().getId())) {
                 throw new RuntimeException("Reservation already exists");
             }
         });
+
         if (!timeslot.isAvailable()) {
             return false;
         }
+
         timeslot.setAvailable(false);
         timeslotRepository.save(timeslot);
 
@@ -55,6 +58,23 @@ public class EquipmentServiceImpl implements EquipmentService {
         reservation.setUser(user);
         reservation.setTimeSlot(timeslot);
         reservation.setCompany(company);
+
+        Map<Equipment, Integer> equipmentQuantities = new HashMap<>();
+        newReservationDTO.getEquipment().forEach(simpleEquipmentDTO -> {
+            Equipment equipment = equipmentRepository.findById(simpleEquipmentDTO.getId()).orElseThrow();
+            int reservedAmount = simpleEquipmentDTO.getAmount();
+
+            if (equipment.getAmount() < reservedAmount) {
+                throw new RuntimeException("Insufficient quantity for equipment: " + equipment.getName());
+            }
+
+            equipment.setAmount(equipment.getAmount() - reservedAmount);
+            equipmentRepository.save(equipment);
+
+            equipmentQuantities.put(equipment, reservedAmount);
+        });
+
+        reservation.setEquipmentQuantities(equipmentQuantities);
         reservationRepository.save(reservation);
 
         String qrCodeImage = qrCodeService.generateQRCode(user, reservation);
@@ -64,8 +84,10 @@ public class EquipmentServiceImpl implements EquipmentService {
         details.setMessageBody("<p>Your reservation has been confirmed. See the attached QR code.</p><img src='cid:qrImage' />");
 
         emailService.sendEmailWithAttachment(details, qrCodeImage);
+
         return true;
     }
+
 
 
     public List<Equipment> getAllEquipment() {

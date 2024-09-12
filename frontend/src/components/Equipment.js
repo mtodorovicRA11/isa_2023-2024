@@ -1,12 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {useParams} from 'react-router-dom';
 import './Equipment.css';
-import Header from "./Header";
+import Header from './Header';
 
 const Equipment = ({token}) => {
-    const {companyId, id} = useParams();
-    const [equipment, setEquipment] = useState(null);
+    const {id} = useParams();
+    const [equipmentList, setEquipmentList] = useState([]);
+    const [selectedEquipment, setSelectedEquipment] = useState({});
     const [timeslots, setTimeslots] = useState([]);
     const [selectedTimeslot, setSelectedTimeslot] = useState(null);
     const [reservationStatus, setReservationStatus] = useState('');
@@ -22,85 +23,112 @@ const Equipment = ({token}) => {
     }, []);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/equipment/${id}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then(response => {
-                setEquipment(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching equipment:', error);
-            });
-
-        axios.get(`http://localhost:8080/equipment/${id}/timeslots`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then(response => {
-                setTimeslots(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching timeslots:', error);
-            });
-    }, [id, token]);
-
-    const handleReserve = () => {
-        if (selectedTimeslot) {
-            axios.post(`http://localhost:8080/equipment/${id}/reserve`, null, {
-                params: {
-                    timeslotId: selectedTimeslot,
-                    companyId: companyId
-                },
+        axios
+            .get(`http://localhost:8080/equipment/company/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
-                }
+                },
             })
-                .then(response => {
-                    setReservationStatus(response.data);
-                    setSelectedTimeslot(null);
-                    return axios.get(`http://localhost:8080/equipment/${id}/timeslots`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
+            .then((response) => {
+                setEquipmentList(response.data);
+            })
+            .catch((error) => console.error('Error fetching equipment:', error));
+
+        axios
+            .get(`http://localhost:8080/equipment/${id}/timeslots`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+            })
+            .then((response) => {
+                setTimeslots(response.data);
+            })
+            .catch((error) => console.error('Error fetching timeslots:', error));
+    }, [id, token]);
+
+    const handleEquipmentChange = (equipmentId, quantity) => {
+        setSelectedEquipment((prevState) => ({
+            ...prevState, [equipmentId]: parseInt(quantity, 10),
+        }));
+    };
+
+    const handleReserve = () => {
+        if (selectedTimeslot && Object.keys(selectedEquipment).length > 0) {
+            const equipmentArray = Object.entries(selectedEquipment).map(([id, amount]) => ({
+                id: parseInt(id), amount,
+            }));
+            axios
+                .post('http://localhost:8080/equipment/reserve', {
+                    equipment: equipmentArray, timeSlotId: selectedTimeslot
+                },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    params: {
+                        companyId: id,
+                    }
                 })
-                .then(response => {
-                    setTimeslots(response.data);
+                .then((response) => {
+                    setReservationStatus('Reservation successful');
+                    setSelectedEquipment({});
+                    window.location.reload();
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error('Error reserving equipment:', error);
                     setReservationStatus('Reservation failed');
                 });
         } else {
-            setReservationStatus('No timeslot selected');
+            setReservationStatus('Please select equipment and timeslot');
         }
     };
 
-    return (<div><Header isAuthenticated={isAuthenticated}/>
-            <div className="reservation-container">
-                {equipment && <h2>Reserve {equipment.name}</h2>}
-                <h3>Available Timeslots</h3>
-                <ul className="timeslot-list">
-                    {timeslots.map(timeslot => (<li key={timeslot.id} className="timeslot-item">
-                            <label>
-                                <input
-                                    type="radio"
-                                    name="timeslot"
-                                    value={timeslot.id}
-                                    checked={selectedTimeslot === timeslot.id}
-                                    onChange={() => setSelectedTimeslot(timeslot.id)}
-                                />
-                                {timeslot.startTime} - {timeslot.endTime}
-                            </label>
-                        </li>))}
-                </ul>
-                <button onClick={handleReserve} className="reserve-button">Reserve</button>
-                {reservationStatus && <p className="reservation-status">{reservationStatus}</p>}
-            </div>
-        </div>);
+    return (<div>
+        <Header isAuthenticated={isAuthenticated}/>
+        <div className="reservation-container">
+            <h2>Reserve Equipment</h2>
+
+            <h3>Select Equipment and Quantities</h3>
+            <ul className="equipment-list">
+                {equipmentList.map((eq) => (<li
+                    key={eq.id}
+                    className={`equipment-item ${selectedEquipment[eq.id] ? 'selected-equipment' : ''}`}
+                >
+                            <span>
+                                {eq.name} (Available: {eq.amount})
+                            </span>
+                    <input
+                        type="number"
+                        min="1"
+                        max={eq.amount}
+                        value={selectedEquipment[eq.id] || 1}
+                        onChange={(e) => handleEquipmentChange(eq.id, e.target.value)}
+                    />
+                </li>))}
+            </ul>
+
+            <h3>Available Timeslots</h3>
+            <ul className="timeslot-list">
+                {timeslots.map((timeslot) => (<li key={timeslot.id} className="timeslot-item">
+                    <label>
+                        <input
+                            type="radio"
+                            name="timeslot"
+                            value={timeslot.id}
+                            checked={selectedTimeslot === timeslot.id}
+                            onChange={() => setSelectedTimeslot(timeslot.id)}
+                        />
+                        {timeslot.startTime} - {timeslot.endTime}
+                    </label>
+                </li>))}
+            </ul>
+
+            <button onClick={handleReserve} className="reserve-button">
+                Reserve
+            </button>
+            {reservationStatus && <p className="reservation-status">{reservationStatus}</p>}
+        </div>
+    </div>);
 };
 
 export default Equipment;
