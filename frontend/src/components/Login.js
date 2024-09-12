@@ -18,6 +18,7 @@ const Login = ({ setToken }) => {
         password
       });
       setToken(response.data.accessToken);
+      localStorage.setItem('authToken', response.data.accessToken);
       navigate('/home');
     } catch (error) {
       setError('Login failed. Please check your credentials and try again.');

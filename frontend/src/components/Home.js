@@ -11,6 +11,15 @@ const Home = ({token}) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
+    const checkAuthStatus = () => {
+      const token = localStorage.getItem('authToken');
+      setIsAuthenticated(!!token);
+    };
+
+    checkAuthStatus();
+  }, []);
+
+  useEffect(() => {
     axios.get('http://localhost:8080/company/all', {
       headers: {
         'Authorization': `Bearer ${token}`  // Set the Bearer token
@@ -22,7 +31,6 @@ const Home = ({token}) => {
 
   useEffect(() => {
     if (selectedCompany) {
-      console.log(selectedCompany)
       axios.get(`http://localhost:8080/equipment/company/${selectedCompany.id}`, {
         headers: {
           'Authorization': `Bearer ${token}`  // Set the Bearer token
@@ -33,14 +41,6 @@ const Home = ({token}) => {
     }
   }, [selectedCompany]);
 
-  useEffect(() => {
-    const checkAuthStatus = () => {
-      const token = localStorage.getItem('authToken');
-      setIsAuthenticated(!!token);
-    };
-
-    checkAuthStatus();
-  }, []);
 
   const handleCompanySelect = (company) => {
     setSelectedCompany(company);

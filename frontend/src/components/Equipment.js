@@ -1,14 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import './Equipment.css';
+import Header from "./Header";
 
-const Equipment = ({ token }) => {
-    const { companyId, id } = useParams();
+const Equipment = ({token}) => {
+    const {companyId, id} = useParams();
     const [equipment, setEquipment] = useState(null);
     const [timeslots, setTimeslots] = useState([]);
     const [selectedTimeslot, setSelectedTimeslot] = useState(null);
     const [reservationStatus, setReservationStatus] = useState('');
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const checkAuthStatus = () => {
+            const token = localStorage.getItem('authToken');
+            setIsAuthenticated(!!token);
+        };
+
+        checkAuthStatus();
+    }, []);
 
     useEffect(() => {
         axios.get(`http://localhost:8080/equipment/${id}`, {
@@ -39,7 +50,10 @@ const Equipment = ({ token }) => {
     const handleReserve = () => {
         if (selectedTimeslot) {
             axios.post(`http://localhost:8080/equipment/${id}/reserve`, null, {
-                params: { timeslotId: selectedTimeslot, companyId: companyId },
+                params: {
+                    timeslotId: selectedTimeslot,
+                    companyId: companyId
+                },
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -65,30 +79,28 @@ const Equipment = ({ token }) => {
         }
     };
 
-    return (
-        <div className="reservation-container">
-            {equipment && <h2>Reserve {equipment.name}</h2>}
-            <h3>Available Timeslots</h3>
-            <ul className="timeslot-list">
-                {timeslots.map(timeslot => (
-                    <li key={timeslot.id} className="timeslot-item">
-                        <label>
-                            <input
-                                type="radio"
-                                name="timeslot"
-                                value={timeslot.id}
-                                checked={selectedTimeslot === timeslot.id}
-                                onChange={() => setSelectedTimeslot(timeslot.id)}
-                            />
-                            {timeslot.startTime} - {timeslot.endTime}
-                        </label>
-                    </li>
-                ))}
-            </ul>
-            <button onClick={handleReserve} className="reserve-button">Reserve</button>
-            {reservationStatus && <p className="reservation-status">{reservationStatus}</p>}
-        </div>
-    );
+    return (<div><Header isAuthenticated={isAuthenticated}/>
+            <div className="reservation-container">
+                {equipment && <h2>Reserve {equipment.name}</h2>}
+                <h3>Available Timeslots</h3>
+                <ul className="timeslot-list">
+                    {timeslots.map(timeslot => (<li key={timeslot.id} className="timeslot-item">
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="timeslot"
+                                    value={timeslot.id}
+                                    checked={selectedTimeslot === timeslot.id}
+                                    onChange={() => setSelectedTimeslot(timeslot.id)}
+                                />
+                                {timeslot.startTime} - {timeslot.endTime}
+                            </label>
+                        </li>))}
+                </ul>
+                <button onClick={handleReserve} className="reserve-button">Reserve</button>
+                {reservationStatus && <p className="reservation-status">{reservationStatus}</p>}
+            </div>
+        </div>);
 };
 
 export default Equipment;

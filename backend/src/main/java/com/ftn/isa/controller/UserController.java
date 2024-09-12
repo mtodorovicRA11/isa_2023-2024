@@ -29,19 +29,17 @@ public class UserController {
     // Korisnik jeste autentifikovan, ali nije autorizovan da pristupi resursu
 
     @GetMapping("/{userId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public User loadById(@PathVariable Long userId) {
         return this.userService.findById(userId);
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SYSTEM_ADMIN')")
     public List<User> loadAll() {
         return this.userService.findAll();
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/whoami")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public User user(Principal user) {
         return this.userService.findByUsername(user.getName());
     }

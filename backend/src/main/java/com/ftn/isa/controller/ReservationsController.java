@@ -26,8 +26,9 @@ public class ReservationsController {
         }
     }
 
-    @PostMapping("/cancel/{reservationId}")
-    public ResponseEntity<String> cancelReservation(@PathVariable Long reservationId) {
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/cancel")
+    public ResponseEntity<String> cancelReservation(@RequestParam Long reservationId) {
         try {
             reservationService.cancelReservation(reservationId);
             return ResponseEntity.ok("Reservation canceled successfully!");

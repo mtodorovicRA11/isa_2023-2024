@@ -7,7 +7,6 @@ import com.ftn.isa.model.User;
 import com.ftn.isa.service.EquipmentService;
 import com.ftn.isa.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,14 +21,15 @@ import java.util.Optional;
 public class EquipmentController {
 
     @Autowired
-    private EquipmentService equipmentService;
-    @Autowired
     ReservationService reservationService;
+    @Autowired
+    private EquipmentService equipmentService;
 
     @GetMapping("/all")
     public List<Equipment> getAllEquipment() {
         return equipmentService.getAllEquipment();
     }
+
     @GetMapping("/company/{id}")
     public List<Equipment> getAllEquipmentByCompany(@PathVariable Long id) {
         return equipmentService.getAllEquipmentForCompany(id);
@@ -74,7 +74,7 @@ public class EquipmentController {
     @PostMapping("/{equipmentId}/reserve")
     public String reserveEquipment(@PathVariable Long equipmentId, @RequestParam Long timeslotId, @RequestParam Long companyId) {
         Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User u = User.class.cast(user);
+        User u = (User) user;
 
         boolean reserved = equipmentService.reserveEquipment(equipmentId, timeslotId, u, companyId);
         return reserved ? "Reservation successful" : "Reservation failed. Timeslot is unavailable.";
@@ -83,7 +83,7 @@ public class EquipmentController {
     @GetMapping("/reservations")
     public List<Reservation> getTimeslotsByUserId() {
         Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User u = User.class.cast(user);
+        User u = (User) user;
         return equipmentService.getReservationsByUserId(u.getId());
     }
 }
