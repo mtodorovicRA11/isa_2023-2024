@@ -67,9 +67,9 @@ public class EquipmentController {
         return equipmentService.searchEquipmentByName(name);
     }
 
-    @GetMapping("/{equipmentId}/timeslots")
-    public List<TimeSlot> getAvailableTimeslots(@PathVariable Long equipmentId) {
-        return equipmentService.getAvailableTimeslots(equipmentId);
+    @GetMapping("/{companyId}/timeslots")
+    public List<TimeSlot> getAvailableTimeslots(@PathVariable Long companyId) {
+        return equipmentService.getAvailableTimeslots(companyId);
     }
 
     @PostMapping("/reserve")

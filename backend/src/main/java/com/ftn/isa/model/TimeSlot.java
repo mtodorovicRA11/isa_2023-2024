@@ -30,6 +30,6 @@ public class TimeSlot {
     private boolean isAvailable;
 
     @ManyToOne
-    @JoinColumn(name = "equipment_id")
-    private Equipment equipment;
+    @JoinColumn(name = "company_id")
+    private Company company;
 }

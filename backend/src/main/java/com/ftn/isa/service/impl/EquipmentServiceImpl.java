@@ -32,7 +32,7 @@ public class EquipmentServiceImpl implements EquipmentService {
     private CompanyRepository companyRepository;
 
     public List<TimeSlot> getAvailableTimeslots(Long equipmentId) {
-        return timeslotRepository.findByEquipmentIdAndIsAvailable(equipmentId, true);
+        return timeslotRepository.findByCompanyIdAndIsAvailable(equipmentId, true);
     }
 
     public boolean reserveEquipment(NewReservationDTO newReservationDTO, User user, Long companyId) {

@@ -57,6 +57,8 @@ const Equipment = ({token}) => {
             const equipmentArray = Object.entries(selectedEquipment).map(([id, amount]) => ({
                 id: parseInt(id), amount,
             }));
+            console.log(equipmentArray.length)
+            console.log(selectedTimeslot)
             axios
                 .post('http://localhost:8080/equipment/reserve', {
                     equipment: equipmentArray, timeSlotId: selectedTimeslot
@@ -101,7 +103,7 @@ const Equipment = ({token}) => {
                         type="number"
                         min="1"
                         max={eq.amount}
-                        value={selectedEquipment[eq.id] || 1}
+                        value={selectedEquipment[eq.id] || 0}
                         onChange={(e) => handleEquipmentChange(eq.id, e.target.value)}
                     />
                 </li>))}

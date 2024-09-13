@@ -17,7 +17,7 @@ public class ReservationsController {
     ReservationService reservationService;
 
     @PostMapping("/create")
-    public ResponseEntity<String> createReservation(NewReservationDTO newReservationDTO) {
+    public ResponseEntity<String> createReservation(@RequestBody NewReservationDTO newReservationDTO) {
         try {
             reservationService.createReservation(newReservationDTO);
             return ResponseEntity.ok("Reservation booked successfully!");

@@ -25,7 +25,7 @@ public interface EquipmentService {
 
     List<Equipment> searchEquipmentByName(String name);
 
-    List<TimeSlot> getAvailableTimeslots(Long equipmentId);
+    List<TimeSlot> getAvailableTimeslots(Long companyId);
 
     boolean reserveEquipment(NewReservationDTO newReservationDTO, User user, Long companyId);
 

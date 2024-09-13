@@ -6,6 +6,7 @@ import Home from './components/Home';
 import Equipment from './components/Equipment';
 import Profile from "./components/Profile";
 import PrivateRoute from './components/PrivateRoute';
+import Complain from "./components/Complain";
 
 function App() {
     const [token, setToken] = useState(() => localStorage.getItem('authToken') || '');
@@ -29,6 +30,10 @@ function App() {
                 </Route>
                 <Route path="/" element={<PrivateRoute />}>
                     <Route path="/profile" element={<Profile token={token}/>}/>
+                    <Route path="/" element={<Home />} />
+                </Route>
+                <Route path="/" element={<PrivateRoute />}>
+                    <Route path="/complain" element={<Complain token={token}/>}/>
                     <Route path="/" element={<Home />} />
                 </Route>
             </Routes>

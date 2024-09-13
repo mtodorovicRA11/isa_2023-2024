@@ -29,10 +29,10 @@ public class QRCodeServiceImpl implements QRCodeService {
         String userText = user.getFirstName() + ' ' + user.getLastName();
         String dateText = reservation.getTimeSlot().getStartTime().toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
         String timeText = reservation.getTimeSlot().getStartTime().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
-        String equipment = String.valueOf(reservation.getTimeSlot().getEquipment().getName());
+        String company = String.valueOf(reservation.getTimeSlot().getCompany().getName());
         String reservationId = String.valueOf(reservation.getId());
 
-        String qrCodeText = "Reservation: \n-User: " + userText + "\n-Date: " + dateText + "\n-Time: " + timeText + "\n-Reservation: " + reservationId  + "\n-Equipment: " + equipment;
+        String qrCodeText = "Reservation: \n-User: " + userText + "\n-Date: " + dateText + "\n-Time: " + timeText + "\n-Reservation: " + reservationId  + "\n-Equipment: " + company;
 
 
         byte[] image = getQRCodeImage(qrCodeText, 250, 250);

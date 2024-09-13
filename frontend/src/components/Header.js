@@ -17,11 +17,11 @@ const Header = ({isAuthenticated}) => {
                     {!isAuthenticated ? (<>
                         <li><Link to="/login">Login</Link></li>
                         <li><Link to="/register">Register</Link></li>
-                        <li><Link to="/profile">Profile</Link></li>
                     </>) : (<>
                         <li><Link to="/profile">Profile</Link></li>
+                        <li><Link to="/complain">Complain</Link></li>
                         <li>
-                            <button onClick={handleLogout} className="logout-button">Logout</button>
+                            <a onClick={handleLogout} className="logout-button">Logout</a>
                         </li>
                     </>)}
                 </ul>

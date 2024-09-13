@@ -9,6 +9,7 @@ import com.ftn.isa.model.Complain;
 import com.ftn.isa.model.User;
 import com.ftn.isa.repository.CompanyReservationRepository;
 import com.ftn.isa.repository.ComplainRepository;
+import com.ftn.isa.repository.ReservationRepository;
 import com.ftn.isa.service.CompanyService;
 import com.ftn.isa.service.ComplainService;
 import com.ftn.isa.service.UserService;
@@ -30,20 +31,17 @@ public class ComplainServiceImpl implements ComplainService {
     ComplainRepository complainRepository;
     @Autowired
     CompanyReservationRepository companyReservationRepository;
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     @Override
-    public void submit(NewComplainDTO newComplainDTO) {
-        User user = userService.findById(newComplainDTO.getUserId());
-        Company company = newComplainDTO.getCompanyId() != null ? companyService.findById(newComplainDTO.getCompanyId()) : null;
+    public void submit(NewComplainDTO newComplainDTO, User user) {
+        Company company = companyService.findById(newComplainDTO.getCompanyId());
         User administrator = newComplainDTO.getAdministratorId() != null ? userService.findById(newComplainDTO.getAdministratorId()) : null;
 
-        if (company != null && !companyReservationRepository.existsByUserAndCompany(user, company)) {
+        if (company != null && !reservationRepository.existsByUserAndCompany(user, company)) {
             throw new RuntimeException("You can only complain about a company you made reservation.");
         }
-
-//        if (administrator != null && !companyReservationRepository.existsByUserAndReservation_Administrator(user, administrator)) {
-//            throw new RuntimeException("You can only complain about an administrator you had contact with.");
-//        }
 
         Complain complain = new Complain();
         complain.setUser(user);
@@ -54,8 +52,7 @@ public class ComplainServiceImpl implements ComplainService {
     }
 
     @Override
-    public List<ComplainReturnDTO> getAll(Long userId) {
-        User user = userService.findById(userId);
+    public List<ComplainReturnDTO> getAll(User user) {
         List<Complain> complains = complainRepository.findByUser(user);
         return complainsMapper.toDTO(complains);
     }

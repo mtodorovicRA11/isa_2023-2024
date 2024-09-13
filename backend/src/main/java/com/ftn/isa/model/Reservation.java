@@ -27,7 +27,8 @@ public class Reservation {
     @OneToOne
     @JoinColumn(name = "company_id")
     private Company company;
-    @ElementCollection
+
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "reservation_equipment", joinColumns = @JoinColumn(name = "reservation_id"))
     @MapKeyJoinColumn(name = "equipment_id")
     @Column(name = "quantity")

@@ -45,7 +45,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new RuntimeException("Reservation not found"));
         TimeSlot timeslot = reservation.getTimeSlot();
         timeslot.setAvailable(true);
-        timeslot.setEquipment(null);
+        timeslot.setCompany(null);
         timeSlotRepository.save(timeslot);
         boolean isWithin24 = isWithin24Hours(reservation.getTimeSlot().getStartTime(), LocalDateTime.now());
         User user = reservation.getUser();
